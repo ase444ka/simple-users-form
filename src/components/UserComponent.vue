@@ -33,14 +33,14 @@
       <v-text-field
         density="compact"
         variant="outlined"
-        type="password"
+        :type="showPassword ? 'text' : 'password'"
         v-model="password"
         @blur="isPasswordClean = false"
         :error-messages="
           isPasswordClean ? '' : passwordErrorMessage(localUser, password)
         "
-        :append-inner-icon="'mdi-eye'"
-        @click:append-inner=""
+        :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+        @click:append-inner="showPassword = !showPassword"
       />
     </v-col>
     <v-col cols="1">
@@ -79,6 +79,8 @@ const password = ref(props.user.password);
 const isTagsClean = ref(true);
 const isNameClean = ref(true);
 const isPasswordClean = ref(true);
+
+const showPassword = ref(false)
 
 const tags = computed(() =>
   tagsText.value.split(";").map((t) => ({ text: t }))

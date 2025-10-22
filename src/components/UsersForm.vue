@@ -2,7 +2,7 @@
   <v-container max-width="900">
     <div class="mb-8 text-h5">
       Учетные записи
-      <v-btn icon="mdi-plus" class="ml-2 text-h5"></v-btn>
+      <v-btn icon="mdi-plus" class="ml-2 text-h5" @click="createUser"></v-btn>
     </div>
     <v-alert icon="mdi-help-circle"
       >Для указания нескольких меток для одной пары используйте разделитель
@@ -14,7 +14,7 @@
       <v-col>Логин</v-col>
       <v-col cols="4">Пароль</v-col>
     </v-row>
-    <UserComponent v-for="user in store.users" :user="user"  />
+    <UserComponent v-for="user in userStore.users" :user="user"  />
   </v-container>
 </template>
 
@@ -22,6 +22,7 @@
 import UserComponent from './UserComponent.vue'
 import {useUserStore} from '../stores/users'
 
-const store = useUserStore()
+const userStore = useUserStore()
+const createUser = () => userStore.createUser()
 
 </script>

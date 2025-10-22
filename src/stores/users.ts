@@ -2,16 +2,10 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import storage from "../utils/localStorage";
 
-type User = {
-  id?: number;
-  name: string;
-  password: string | null;
-  type: "LDAP" | "local";
-  tags: { text: string }[];
-};
+
 
 const cashedUsers: User[] = storage.get("users") || [];
-const lastIndex: number = +storage.get("lastUserIndex") || 1;
+let lastIndex: number = +storage.get("lastUserIndex") || 1;
 const isValid = (user: User) => {
   if (user.tags.map((t) => t.text).join(";").length > 50) {
     return false;
@@ -29,17 +23,19 @@ const isValid = (user: User) => {
 
 export const useUserStore = defineStore("users", () => {
   const users = ref<User[]>(cashedUsers);
-  const lastUserIndex = ref<number>(lastIndex);
 
   function createUser() {
-    users.value.push({ name: "", password: null, type: "LDAP", tags: [] });
+    users.value.push({ id: ++lastIndex, name: "", password: null, type: "LDAP", tags: [] });
+  }
+
+  function updateUser(id: number, value: User) {
+    const updatingIndex = users.value.findIndex(user => user.id === id)
+    users.value[updatingIndex] = value
   }
 
   function addUser() {
-    const newUser = users.value.pop();
-    users.value.push({ ...newUser!, id: ++lastUserIndex.value });
     storage.set("users", users.value);
-    storage.set("lastUserIndex", lastUserIndex.value);
+    storage.set("lastUserIndex", lastIndex);
   }
 
   function saveUser() {
@@ -56,6 +52,7 @@ export const useUserStore = defineStore("users", () => {
   return {
     users,
     createUser,
+    updateUser,
     addUser,
     saveUser,
     deleteUser,

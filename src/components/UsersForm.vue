@@ -19,7 +19,7 @@
       <v-col>Логин</v-col>
       <v-col cols="4">Пароль</v-col>
     </v-row>
-    <UserComponent v-for="user in userStore.users" :user="user" />
+    <UserComponent v-for="user in userStore.users" :user="user" :key="user.id"/>
   </v-container>
 </template>
 

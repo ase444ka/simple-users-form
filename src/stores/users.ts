@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, nextTick } from "vue";
 import { defineStore } from "pinia";
 import storage from "../utils/localStorage";
 import {isValid} from '../validations/user'
@@ -14,7 +14,7 @@ export const useUserStore = defineStore("users", () => {
 
   function createUser() {
     users.value.push({ id: ++lastIndex, name: "", password: null, type: "LDAP", tags: [] });
-    storage.set("lastUserIndex", lastIndex);
+    nextTick(() => storage.set("lastUserIndex", lastIndex))
 
   }
 
@@ -23,17 +23,13 @@ export const useUserStore = defineStore("users", () => {
     users.value[updatingIndex] = value
   }
 
-  function addUser() {
-    storage.set("users", users.value);
-  }
-
   function saveUser() {
     storage.set("users", users.value);
   }
 
   function deleteUser(id: number) {
     users.value = users.value.filter((user) => user.id !== id);
-    storage.set("users", users.value);
+    nextTick(() => storage.set("users", users.value))
   }
 
   const isAllOk = computed(() => users.value.every((user) => isValid(user)));
@@ -42,7 +38,6 @@ export const useUserStore = defineStore("users", () => {
     users,
     createUser,
     updateUser,
-    addUser,
     saveUser,
     deleteUser,
     isAllOk,

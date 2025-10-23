@@ -19,13 +19,31 @@
       <v-col>Логин</v-col>
       <v-col cols="4">Пароль</v-col>
     </v-row>
-    <UserComponent v-for="user in userStore.users" :user="user" :key="user.id"/>
+    <TransitionGroup name="list">
+      <UserComponent
+        v-for="user in userStore.users"
+        :user="user"
+        :key="user.id"
+      />
+    </TransitionGroup>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import UserComponent from './UserComponent.vue'
-import {useUserStore} from '../stores/users'
+import UserComponent from "./UserComponent.vue";
+import { useUserStore } from "../stores/users";
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 </script>
+
+<style>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scaleY(0);
+}
+</style>
